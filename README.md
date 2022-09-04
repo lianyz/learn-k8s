@@ -1196,3 +1196,104 @@ nginx                              1/1     Running   151 (20d ago)   252d
 nginx-deployment-667c4d74b-dlnbb   1/1     Running   0               21m
 nginx1                             1/1     Running   0               24h
 ```
+
+#### ConfigMap
+
+```
+cat game.properties
+```
+
+##### create from config file
+```
+k create configmap game-config --from-file=game.properties
+```
+
+```
+configmap/game-config created
+```
+
+```
+k get configmap/game-config -oyaml
+```
+
+```yaml
+apiVersion: v1
+data:
+  game.properties: |
+    enemies=aliens
+    bbb
+    #aaa
+    lives=3
+    enemies.cheat=true
+    enemies.cheat.level=noGoodRotten
+    secret.code.passphase=UUDDLRLRBABAS
+    secret.code.allowed=true
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2022-09-04T13:38:48Z"
+  name: game-config
+  namespace: default
+  resourceVersion: "1029169"
+  uid: e9035267-7f3a-4426-a073-5bd11a1b4805
+```
+
+##### create from env config file
+```
+k create configmap game-env-config --from-env-file=game.properties
+```
+
+```
+configmap/game-env-config created
+```
+
+
+```
+k get configmap/game-env-config -oyaml
+```
+
+```yaml
+apiVersion: v1
+data:
+  bbb: ""
+  enemies: aliens
+  enemies.cheat: "true"
+  enemies.cheat.level: noGoodRotten
+  lives: "3"
+  secret.code.allowed: "true"
+  secret.code.passphase: UUDDLRLRBABAS
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2022-09-04T13:39:14Z"
+  name: game-env-config
+  namespace: default
+  resourceVersion: "1029226"
+  uid: e8a0ee35-d586-4e5a-b533-3db7f1721315
+```
+
+##### create from literal
+
+```
+k create configmap special-config --from-literal=special.how=very --from-literal=special.type=charm
+```
+
+```
+configmap/special-config created
+```
+
+```
+k get configmap/special-config -oyaml
+```
+
+```yaml
+apiVersion: v1
+data:
+  special.how: very
+  special.type: charm
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2022-09-04T13:47:49Z"
+  name: special-config
+  namespace: default
+  resourceVersion: "1030354"
+  uid: 37c62017-cc06-4398-ac0d-4379979010ee
+```
