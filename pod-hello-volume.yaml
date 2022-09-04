@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hello-volume
+spec:
+  containers:
+  - image: nginx:1.15
+    name: nginx
+    volumeMounts:
+    - name: data
+      mountPath: /vdata
+  volumes:
+  - name: data
+    emptyDir: {}
+
