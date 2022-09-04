@@ -6,8 +6,14 @@ alias ks='kubectl -n kube-system'
 ```
 
 ## kube-system核心组件
-master节点上的四个核心组件：api-server, controller-manager, scheduler, etcd
-worker节点上的两个核心组件：kubelet, proxy
+master节点上的四个核心组件：
+* api-server
+* controller-manager
+* scheduler
+* etcd
+worker节点上的两个核心组件：
+* kubelet
+* proxy
 ```
 ks get po
 ```
@@ -439,11 +445,11 @@ Events:
 
 ## 推荐的Add-ons
 
-kube-dns: 负责为整个集群提供DNS服务；
-Ingress Congroller: 为服务提供外网接口；
-MetricsServer: 提供资源监控；
-Dashboard: 提供GUI；
-Fluentd-Elasticsearch: 提供集群日志采集、存储与查询；
+* kube-dns: 负责为整个集群提供DNS服务；
+* Ingress Congroller: 为服务提供外网接口；
+* MetricsServer: 提供资源监控；
+* Dashboard: 提供GUI；
+* Fluentd-Elasticsearch: 提供集群日志采集、存储与查询；
 
 
 ## kubectl
