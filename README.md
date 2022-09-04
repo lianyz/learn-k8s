@@ -1297,3 +1297,250 @@ metadata:
   resourceVersion: "1030354"
   uid: 37c62017-cc06-4398-ac0d-4379979010ee
 ```
+
+##### use configmap
+
+```
+k create -f pod-configmap-volume.yaml 
+```
+
+```
+pod/config-volume-pod created
+```
+
+```
+k get pod
+```
+
+```
+NAME                               READY   STATUS      RESTARTS        AGE
+centos-578b69b65f-jl9ww            1/1     Running     0               4h35m
+config-volume-pod                  0/1     Completed   0               3s
+hello-volume                       1/1     Running     0               5h12m
+nginx                              1/1     Running     151 (20d ago)   252d
+nginx-deployment-667c4d74b-dlnbb   1/1     Running     0               4h53m
+nginx1                             1/1     Running     0               29h
+```
+
+```
+k logs config-volume-pod
+```
+
+```
+special.how
+special.type
+```
+
+#### Secret
+
+Secret是用来保存和传递密码、密钥、认证凭证等敏感信息的对象
+
+
+#### User Account
+
+用户账户为人提供账户标识
+
+##### Service Account
+
+服务账户为计算机进程和Kubernetes集群中运行的Pod提供账户标识
+
+用户账户与服务账户的区别是作用范围：
+
+* 用户账户对应的是人的身份，人的身份与服务的Namespace无关，所以用户账户是跨Namespace的
+* 服务账户对应的是一个运行中程序的身份，与特定Namespace是相关的
+
+```
+k get ns default
+```
+
+```
+NAME      STATUS   AGE
+default   Active   253d
+```
+
+```
+k get sa -n default
+```
+
+```
+NAME      SECRETS   AGE
+default   1         253d
+```
+
+```
+k get sa -n default -oyaml
+```
+
+```
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    creationTimestamp: "2021-12-25T12:59:39Z"
+    name: default
+    namespace: default
+    resourceVersion: "427"
+    uid: 4236d6c3-f21a-48e3-b22c-87fe51298cb7
+  secrets:
+  - name: default-token-ddbkb
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: "
+```
+
+```
+k get secret default-token-ddbkb
+```
+
+```
+NAME                  TYPE                                  DATA   AGE
+default-token-ddbkb   kubernetes.io/service-account-token   3      253d
+```
+
+```
+k get secret default-token-ddbkb -oyaml
+```
+
+```yaml
+apiVersion: v1
+data:
+  ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvakNDQWVhZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeE1USXlOVEV5TlRreE5Gb1hEVE14TVRJeU16RXlOVGt4TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTWpjCmpuczZmQ1hUa01jbnVtbU5qS1VLMVRaQ2pVWDNzWGh5WC95SXAyQk12T0ZSaE5DdTQyWjl0UFREM0QxSm5vdVIKalYyQURlK1cxcU1VU3BRemd1T3d2bEo5dHRDWDcvSnlVelBuRWlQV0xJYVUvczNScEVkMHZUR2UzUXVJRGs0bgpCa21MMDgrSXVTZXYvYml4Sjl5Qnk1Qk5WMXA2ZXFTZk5lcCtiN2ZHVWJsUzVZZ05ZMFdiYTMzb3FweDJkNnlOCjE1RGRSTHpwN0lSdm5xVEhkSlZIVHdwZ1NxSlNqa2cxNVpjVlRZZW4xRGIydlc1WkRBYjFkSFoxczNzaUo0LzcKZ2Y0bnU0YkdaMTNtVHFtVlFjV0d3aExSc1krWU9TcDVDYlNXcnM3aWtVeXVYVlZRMUN5ZnVzWUtYdElhUFFhSgpLSUZWZytwVGpHWWZrcCtUa0s4Q0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZFMHJMdHl2WngwMFM2UTVqTVg0Z2NZVkpZcDVNQlVHQTFVZEVRUU8KTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBRTd2cFIyU05lY2U0NG8yM0hSKwpVM2ROK0NscFplTFZtUkhXMGhmbW8xSnk0T0hpS2tScFJqWFViejFNZlRoWXdmMDUxYU00dlFwcDBNemFSUG5CClFycVV3bEJ6MVhUaDh6c0duQWRsNVM3eHZmdDIwMGNVWGVhWk1HRHVtQlVtd1RiWHhxTVhXZ0pUdzgrRkIxOWUKOWRZTmNLc2x6WStFWjF4UHBqdHFSUmNTTlYrd1BSNHZ2SEt4K0FWSjJiVmZoVmtuV2M4d2NYOU83RE9uU1p0TAplb3R5NmtWYkZsdEgyL1V1YXhVeUVoMHFTdDZRMzNhOWpYWDBvTzF6NFN0K1hLNEVFcTluenQ4QUN2RzI3Qk5qCnl2b2puL1E4SFJRa0cxRlB0SFpVMWd2ZFVGU01KUTJPaGVreVhYbS91dlBSS2YxZkhXREZ2RGpRYlVKUWRHR3gKeUk0PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  namespace: ZGVmYXVsdA==
+  token: ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklucEdNbE5FYmtKcU5VVlJhMDAyVFhCUFlsRnpZalJVWDFGWFJGTkpObGM1V25WSlNWRlRjSFZPUkZraWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWldaaGRXeDBJaXdpYTNWaVpYSnVaWFJsY3k1cGJ5OXpaWEoyYVdObFlXTmpiM1Z1ZEM5elpXTnlaWFF1Ym1GdFpTSTZJbVJsWm1GMWJIUXRkRzlyWlc0dFpHUmlhMklpTENKcmRXSmxjbTVsZEdWekxtbHZMM05sY25acFkyVmhZMk52ZFc1MEwzTmxjblpwWTJVdFlXTmpiM1Z1ZEM1dVlXMWxJam9pWkdWbVlYVnNkQ0lzSW10MVltVnlibVYwWlhNdWFXOHZjMlZ5ZG1salpXRmpZMjkxYm5RdmMyVnlkbWxqWlMxaFkyTnZkVzUwTG5WcFpDSTZJalF5TXpaa05tTXpMV1l5TVdFdE5EaGxNeTFpTWpKakxUZzNabVUxTVRJNU9HTmlOeUlzSW5OMVlpSTZJbk41YzNSbGJUcHpaWEoyYVdObFlXTmpiM1Z1ZERwa1pXWmhkV3gwT21SbFptRjFiSFFpZlEuaWFoRE85bjhGeWZFNHdpLWR1LVRYOFZpVjZkaTQzQXlDeFJOeEhzYm10U0VYQ0xxbHdrRGhzV0hIcWxfZ1pMS1N2aENZLUJDM0VEZTNDc1ZwODZCeXhvYUswd0NReFdfa3AtajYwUmpLVnpfNXh6Mmw5NHFJam1ETVB3bXFuS2ZxdlRUb0NjeHN3cERwTkJJWFpfdmtwY2FQZEkyU1A3X1Q3NmxLMXVGQW0xakoxeWFlSm9ad0pKTnREMTVCalU3TkNGakIzUnFSSWJwT05xV1NrcHdXZEFYN21xcnJrd1NPUHRXTzhQcml0X1VBb21fWUhTQ0JmOC1RU2tNcG5vSEdfa2g0UzdzMWUyVzZlRDhFTVNTUWNDTllPRS1GQmRKZ2VnTGJlZ0lmMUluemF1S2g2QVhNb3g3b1lWUldWaDJmVHZObTVuTzNoRzVaazE3ZFJCNlJn
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: default
+    kubernetes.io/service-account.uid: 4236d6c3-f21a-48e3-b22c-87fe51298cb7
+  creationTimestamp: "2021-12-25T12:59:39Z"
+  name: default-token-ddbkb
+  namespace: default
+  resourceVersion: "425"
+  uid: 8dd44b10-eb9f-4500-a661-c430a398279f
+type: kubernetes.io/service-account-token
+```
+
+```
+echo -n "default" | base64
+```
+
+```
+ZGVmYXVsdA==
+```
+
+```
+k get po nginx -oyaml
+```
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: 5782af629cb726770e3c624c4c742f1fba17becd07df16c3459e870c6a16084e
+    cni.projectcalico.org/podIP: 192.168.16.139/32
+    cni.projectcalico.org/podIPs: 192.168.16.139/32
+  creationTimestamp: "2021-12-25T15:31:06Z"
+  labels:
+    run: nginx
+  name: nginx
+  namespace: default
+  resourceVersion: "923379"
+  uid: 8d6c729b-aed8-41d7-9dc2-c32692e775f5
+spec:
+  containers:
+  - image: nginx
+    imagePullPolicy: Always
+    name: nginx
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-h5bnq
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: k8smaster
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-h5bnq
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2021-12-25T15:31:06Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2022-08-14T14:48:00Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2022-08-14T14:48:00Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2021-12-25T15:31:06Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://7392b1925b106c52afa6a2ecdce805c38d3ea90ee3e1a89b86078f122d60b0b0
+    image: nginx:latest
+    imageID: docker-pullable://nginx@sha256:0d17b565c37bcbd895e9d92315a05c1c3c9a29f762b011a10c54a66cd53c9b31
+    lastState:
+      terminated:
+        containerID: docker://ee61a9bcec406024f54f33dfb801b517eee7c4d8448c958b239e870026987072
+        exitCode: 255
+        finishedAt: "2022-08-14T14:46:43Z"
+        reason: Error
+        startedAt: "2022-08-14T14:42:15Z"
+    name: nginx
+    ready: true
+    restartCount: 151
+    started: true
+    state:
+      running:
+        startedAt: "2022-08-14T14:48:00Z"
+  hostIP: 10.0.2.15
+  phase: Running
+  podIP: 192.168.16.139
+  podIPs:
+  - ip: 192.168.16.139
+  qosClass: BestEffort
+  startTime: "2021-12-25T15:31:06Z"
+```
