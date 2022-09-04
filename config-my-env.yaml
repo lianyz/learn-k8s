@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-env
+  namespace: lianyz
+data:
+  VARIABLE1: abcdefg
