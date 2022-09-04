@@ -15,6 +15,7 @@ master节点上的四个核心组件：
 worker节点上的两个核心组件：
 * kubelet
 * proxy
+
 ```
 ks get po
 ```
