@@ -1115,3 +1115,76 @@ KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
 KUBERNETES_SERVICE_HOST=10.96.0.1
 PWD=/
 ```
+
+#### 存储卷
+
+存储卷包括Volume和VolumeMounts两部分
+Volume: 定义Pod可以使用的存储卷来源
+VolumeMounts: 定义存储卷如何Mount到容器内部
+
+```
+k create -f pod-hello-volume.yaml
+```
+
+#### Pod网络
+
+Pod的多个容器共享网络Namespace，同一个Pod中的不通容器可以彼此通过loopback地址访问
+
+#### 资源限制
+
+```
+k set resources deployment nginx-app -c=nginx --limits=cpu=500m,memory=128Mi
+```
+
+```
+deployment.apps/nginx-deployment resource requirements updated
+```
+
+#### 健康检查
+
+```
+k create -f deploy-centos-readiness.yaml
+```
+
+```
+deployment.apps/centos created
+```
+
+```
+k get po
+```
+
+```
+NAME                               READY   STATUS    RESTARTS        AGE
+centos-578b69b65f-jl9ww            0/1     Running   0               79s
+hello-volume                       1/1     Running   0               38m
+nginx                              1/1     Running   151 (20d ago)   252d
+nginx-deployment-667c4d74b-dlnbb   1/1     Running   0               19m
+nginx1                             1/1     Running   0               24h
+```
+
+```
+k exec -it centos-578b69b65f-jl9ww -- bash
+```
+
+进入容器后执行
+```
+touch /tmp/healthy
+cat /tmp/healthy
+echo $?
+```
+
+退出容器后，执行以下命令，READY状态1/1表示共有1个容器，1个容器处于就绪状态
+
+```
+k get po
+```
+
+```
+NAME                               READY   STATUS    RESTARTS        AGE
+centos-578b69b65f-jl9ww            1/1     Running   0               2m32s
+hello-volume                       1/1     Running   0               39m
+nginx                              1/1     Running   151 (20d ago)   252d
+nginx-deployment-667c4d74b-dlnbb   1/1     Running   0               21m
+nginx1                             1/1     Running   0               24h
+```
