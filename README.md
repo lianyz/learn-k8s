@@ -1078,6 +1078,7 @@ spec:
 
 
 ```
+k create namespace lianyz
 k create -f pod-hello-env.yaml
 ```
 
@@ -1086,7 +1087,7 @@ pod/hello-env created
 ```
 
 ```
-k exec -it hello-env -- sh
+k exec hello-env -it -n lianyz -- sh
 ```
 
 进入容器后，输入
