@@ -1631,3 +1631,117 @@ Commercial support is available at
 </body>
 </html>
 ```
+
+
+#### Replica Set
+
+#### Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1
+```
+
+```
+k create -f deploy-nginx.yaml 
+```
+
+```
+deployment.apps/deploy-nginx created
+```
+
+```
+k get deploy
+```
+
+```
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+centos         1/1     1            1           25h
+deploy-nginx   0/2     2            0           5s
+```
+
+```
+k get rs
+```
+
+```
+NAME                      DESIRED   CURRENT   READY   AGE
+centos-578b69b65f         1         1         1       25h
+deploy-nginx-7475d54575   2         2         0       10s
+```
+
+```
+k get pod
+```
+
+```
+NAME                            READY   STATUS              RESTARTS        AGE
+centos-578b69b65f-jl9ww         1/1     Running             0               25h
+config-volume-pod               0/1     Completed           0               21h
+deploy-nginx-7475d54575-mtcdp   0/1     ContainerCreating   0               18s
+deploy-nginx-7475d54575-q7fh8   0/1     ContainerCreating   0               18s
+hello-volume                    1/1     Running             0               26h
+nginx                           1/1     Running             151 (21d ago)   253d
+nginx1                          1/1     Running             0               2d2h
+```
+
+修改deployment中的image的版本
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+```
+
+```
+k get rs
+```
+
+```
+NAME                      DESIRED   CURRENT   READY   AGE
+centos-578b69b65f         1         1         1       25h
+deploy-nginx-65895c4c4f   0         0         0       4m40s
+deploy-nginx-7fd9478464   2         2         2       2m59s
+```
+
+```
+k get pod
+```
+
+```
+centos-578b69b65f-jl9ww         1/1     Running     0               25h
+config-volume-pod               0/1     Completed   0               21h
+deploy-nginx-7fd9478464-85dbc   1/1     Running     0               2m48s
+deploy-nginx-7fd9478464-b8gkm   1/1     Running     0               70s
+hello-volume                    1/1     Running     0               26h
+nginx                           1/1     Running     151 (21d ago)   253d
+nginx1                          1/1     Running     0               2d2h
+```
