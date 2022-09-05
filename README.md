@@ -1544,3 +1544,90 @@ status:
   qosClass: BestEffort
   startTime: "2021-12-25T15:31:06Z"
 ```
+
+
+#### Service
+
+将pod暴露成一个服务
+```
+k expose pod nginx --port 80
+```
+
+```
+service/nginx exposed
+```
+
+```
+k get svc
+```
+
+```
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP   253d
+nginx        ClusterIP   10.97.150.10   <none>        80/TCP    4s
+```
+
+```
+ k get svc nginx -oyaml
+```
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2022-09-05T04:17:58Z"
+  labels:
+    run: nginx
+  name: nginx
+  namespace: default
+  resourceVersion: "1038523"
+  uid: d41587de-b872-4a13-9d11-22338b9870bb
+spec:
+  clusterIP: 10.97.150.10
+  clusterIPs:
+  - 10.97.150.10
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: nginx
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+```
+
+```
+curl 10.97.150.10
+```
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
