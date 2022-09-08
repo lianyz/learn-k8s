@@ -1745,3 +1745,20 @@ hello-volume                    1/1     Running     0               26h
 nginx                           1/1     Running     151 (21d ago)   253d
 nginx1                          1/1     Running     0               2d2h
 ```
+
+
+#### 部署envoy
+
+```
+$ k create configmap envoy-config --from-file=envoy.yaml
+$ k create -f deploy-envoy.yaml
+$ k expose deploy envoy --selector run=envoy --port=10000 --type=NodePort
+```
+
+访问服务
+```
+curl <Pod IP Address>:<NodePort>
+```
+
+扩缩容
+kubectl scale deploy <deployment-name> --replicas=<n>
